@@ -1,4 +1,5 @@
-from mongoengine import Document, StringField, EmailField
+from mongoengine import Document, StringField, EmailField, DateTimeField
+import datetime
 
 class User(Document):
     username = StringField(required=True, unique=True, max_length=50)
