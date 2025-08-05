@@ -24,6 +24,10 @@ app.register_blueprint(voicebot_blueprint, url_prefix='/voicebot')
 from routes.auth import auth_blueprint
 app.register_blueprint(auth_blueprint)  # Routes like /signup, /login, etc.
 
+# Register your voice sample blueprint for /upload-voice etc.
+from routes.voice_sample import voice_sample_blueprint
+app.register_blueprint(voice_sample_blueprint)  # new! enables /upload-voice, etc.
+
 # Run Flask app in debug mode
 if __name__ == "__main__":
     app.run(debug=True)
