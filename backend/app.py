@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_mongoengine import MongoEngine
 from dotenv import load_dotenv
 import os
 
@@ -7,13 +8,22 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Import and register blueprints
+# Configure MongoEngine connection with your MongoDB URI
+app.config['MONGODB_SETTINGS'] = {
+    'host': os.environ.get('MONGODB_URI')
+}
+
+# Initialize MongoEngine ORM with Flask app
+db = MongoEngine(app)
+
+# Register your voicebot blueprint with the /voicebot prefix
 from routes.voicebot import voicebot_blueprint
 app.register_blueprint(voicebot_blueprint, url_prefix='/voicebot')
 
-# Add future blueprints here as your app grows
-# from routes.user import user_blueprint
-# app.register_blueprint(user_blueprint, url_prefix='/api/user')
+# Register your auth blueprint with NO prefix to keep flat routes
+from routes.auth import auth_blueprint
+app.register_blueprint(auth_blueprint)  # Routes like /signup, /login, etc.
 
+# Run Flask app in debug mode
 if __name__ == "__main__":
     app.run(debug=True)
