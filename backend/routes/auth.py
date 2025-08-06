@@ -5,6 +5,9 @@ from functools import wraps
 from flask import Blueprint, request, jsonify
 from models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import request, jsonify, send_file
+from services.tts_service import TTSService
+import os
 
 # Load JWT secret
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "ilovenpon")
@@ -166,3 +169,28 @@ def logout(user_id):
         blacklisted_tokens.add(token)
 
     return jsonify({'message': 'Logout successful. Token has been revoked on server.'}), 200
+
+tts_service = TTSService()  # Load TTS model once
+
+@auth_blueprint.route('/tts', methods=['POST'])
+@token_required
+def tts(user_id):
+    """
+    JWT-protected TTS endpoint.
+    Expects: POST JSON {"text": "..."}
+    Returns: audio/wav file if authorized.
+    """
+    data = request.get_json()
+    if not data or "text" not in data:
+        return jsonify({"error": "No text provided"}), 400
+
+    text = data["text"]
+    output_file = "static/audio/generated.wav"
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+    try:
+        tts_service.synthesize_to_file(text, output_file)
+    except Exception as e:
+        return jsonify({"error": f"Failed to synthesize speech: {str(e)}"}), 500
+
+    return send_file(output_file, mimetype="audio/wav")

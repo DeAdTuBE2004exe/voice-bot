@@ -18,7 +18,8 @@ db = MongoEngine(app)
 
 # Register your voicebot blueprint with the /voicebot prefix
 from routes.voicebot import voicebot_blueprint
-app.register_blueprint(voicebot_blueprint, url_prefix='/voicebot')
+# app.register_blueprint(voicebot_blueprint, url_prefix='/voicebot')
+app.register_blueprint(voicebot_blueprint)
 
 # Register your auth blueprint with NO prefix to keep flat routes
 from routes.auth import auth_blueprint
