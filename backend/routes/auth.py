@@ -5,8 +5,7 @@ from functools import wraps
 from flask import Blueprint, request, jsonify, send_file
 from models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import send_file
-from services.tts_service import TTSService  # Correct import path
+from services.tts_service import TTSService
 
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "supersecretjwt")
 auth_blueprint = Blueprint('auth', __name__)
@@ -42,29 +41,33 @@ def signup():
     password = data.get('password')
     if User.objects(username=username).first() or User.objects(email=email).first():
         return jsonify({'error': 'User already exists'}), 400
-    password_hash = generate_password_hash(password)
+    # Always use pbkdf2:sha256 to avoid scrypt issues
+    password_hash = generate_password_hash(password, method='pbkdf2:sha256')
     user = User(username=username, email=email, password_hash=password_hash)
     user.save()
     return jsonify({'message': 'User created successfully'}), 201
 
 @auth_blueprint.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
-    user = (User.objects(username=username).first() if username
-            else User.objects(email=email).first())
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    if not check_password_hash(user.password_hash, password):
-        return jsonify({'error': 'Incorrect password'}), 401
-    payload = {
-        'user_id': str(user.id),
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
-    }
-    token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
-    return jsonify({'token': token}), 200
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        user = (User.objects(username=username).first() if username
+                else User.objects(email=email).first())
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        if not check_password_hash(user.password_hash, password):
+            return jsonify({'error': 'Incorrect password'}), 401
+        payload = {
+            'user_id': str(user.id),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+        }
+        token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
+        return jsonify({'token': token}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @auth_blueprint.route('/profile', methods=['GET'])
 @token_required
@@ -83,7 +86,8 @@ def change_password(user_id):
     user = User.objects(id=user_id).first()
     if not user or not check_password_hash(user.password_hash, current_password):
         return jsonify({'error': 'Invalid current password'}), 401
-    user.password_hash = generate_password_hash(new_password)
+    # Again, only use pbkdf2:sha256 when updating password
+    user.password_hash = generate_password_hash(new_password, method='pbkdf2:sha256')
     user.save()
     return jsonify({'message': 'Password updated successfully'}), 200
 
@@ -125,32 +129,18 @@ def logout(user_id):
         blacklisted_tokens.add(token)
     return jsonify({'message': 'Logout successful. Token has been revoked.'}), 200
 
-# ----------- FINAL /tts ENDPOINT ------------
-tts_service = TTSService()  # Only once at startup
+tts_service = TTSService()  # Initialize once
 
 @auth_blueprint.route('/tts', methods=['POST'])
 @token_required
 def tts(user_id):
     data = request.get_json()
-    if not data or "text" not in data:
+    text = data.get("text")
+    speaker = data.get("speaker", "p273")  # default British female
+    if not text:
         return jsonify({"error": "No text provided"}), 400
-
-    text = data["text"]
     try:
-        wav_bytes_io = tts_service.synthesize_wav_bytes(text)
-
-        # Play audio locally (on the server!)
-        from pydub import AudioSegment
-        from pydub.playback import play
-        audio = AudioSegment.from_file(wav_bytes_io, format="wav")
-        play(audio)
-        wav_bytes_io.seek(0)  # reset pointer for API send
-
+        wav_bytes_io = tts_service.synthesize_wav_bytes(text, speaker)
     except Exception as e:
-        return jsonify({"error": f"Failed to synthesize speech: {str(e)}"}), 500
-
-    return send_file(
-        wav_bytes_io,
-        mimetype="audio/wav",
-        as_attachment=False
-    )
+        return jsonify({"error": f"TTS failed: {str(e)}"}), 500
+    return send_file(wav_bytes_io, mimetype="audio/wav", as_attachment=False)
