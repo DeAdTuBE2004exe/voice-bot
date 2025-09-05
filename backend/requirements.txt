@@ -1,38 +1,38 @@
 # Core web
-gunicorn==23.0.0
+gunicorn
 Flask==2.2.5
-flask-cors==6.0.1
-flask-mongoengine==1.0.0
-Flask-WTF==1.2.2
+flask-cors
+flask-mongoengine
+Flask-WTF
 
 # Database and utilities
-mongoengine==0.29.1
-pymongo==4.14.1
-
+mongoengine
+pymongo
+    
 # Environment
-python-dotenv==1.1.1
+python-dotenv
 
 # HTTP client libs
-httpx==0.28.1
+httpx
 
 # Data science and ML libs (compatible versions)
-numpy==1.25.2
-scipy==1.16.1
-scikit-learn==1.7.1
-pandas==1.5.3
+numpy
+scipy
+scikit-learn
+pandas
 
 # NLP and voice
-spacy==3.8.7
-spacy-legacy==3.0.12
-spacy-loggers==1.0.5
-SudachiPy==0.6.10
+spacy
+spacy-legacy
+spacy-loggers
+SudachiPy
 
 # Audio processing
-librosa==0.11.0
-torchaudio==2.8.0
-torch==2.8.0
+librosa
+torchaudio
+torch
 
 # Pip installers for many dependencies
-setuptools==80.9.0
-wheel==0.45.1
-pip==25.2
+setuptools
+wheel
+pip
