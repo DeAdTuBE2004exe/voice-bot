@@ -1,40 +1,103 @@
-# Core web
+# Core web and deployment
 gunicorn
 Flask==2.2.5
 flask-cors
 flask-mongoengine
 Flask-WTF
-openai-whisper
-whisper
 
 # Database and utilities
 mongoengine
 pymongo
-
-# Environment
 python-dotenv
 
-# HTTP client libs
+# HTTP clients
 httpx
+httpcore
+requests
 
-# Data science and ML libs (compatible versions)
+# Data science and machine learning
 numpy
 scipy
 scikit-learn
 pandas
+joblib
+threadpoolctl
 
-# NLP and voice
+# Natural language processing and related
 spacy
 spacy-legacy
 spacy-loggers
 SudachiPy
+murmurhash
+cymem
+preshed
+blis
+catalogue
+wasabi
+srsly
+langcodes
+typing-extensions
 
-# Audio processing
+# Audio and speech
 librosa
 torchaudio
 torch
+openai-whisper
+TTS
+soundfile
+audioread
+soxr
 
-# Pip installers for many dependencies
+# Visualization and parsing
+matplotlib
+Markdown
+pyparsing
+
+# Packaging and setup tools
 setuptools
 wheel
 pip
+
+# Security and web essentials
+Werkzeug
+Jinja2
+click
+itsdangerous
+MarkupSafe
+WTForms
+email-validator
+
+# Miscellaneous utilities
+pytz
+python-dateutil
+typing-inspection
+rich
+typer
+lazy_loader
+cloudpathlib
+pooch
+python-crfsuite
+jsonlines
+joblib
+
+# NVIDIA CUDA libs (used by torch)
+nvidia-cublas-cu12
+nvidia-cuda-cupti-cu12
+nvidia-cuda-nvrtc-cu12
+nvidia-cuda-runtime-cu12
+nvidia-cudnn-cu12
+nvidia-cufft-cu12
+nvidia-cufile-cu12
+nvidia-curand-cu12
+nvidia-cusolver-cu12
+nvidia-cusparse-cu12
+nvidia-cusparselt-cu12
+nvidia-nccl-cu12
+nvidia-nvjitlink-cu12
+nvidia-nvtx-cu12
+triton
+
+# Audio utilities
+shellingham
+simpleaudio
+
