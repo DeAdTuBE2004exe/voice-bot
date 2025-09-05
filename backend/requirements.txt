@@ -160,7 +160,6 @@ tokenizers
 torch
 torchaudio
 tqdm
-trainer
 transformers
 triton
 TTS
