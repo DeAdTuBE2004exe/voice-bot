@@ -4,11 +4,13 @@ Flask==2.2.5
 flask-cors
 flask-mongoengine
 Flask-WTF
+openai-whisper
+whisper
 
 # Database and utilities
 mongoengine
 pymongo
-    
+
 # Environment
 python-dotenv
 
