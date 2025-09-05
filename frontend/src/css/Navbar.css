@@ -1,0 +1,267 @@
+/*
+ * Navbar Styles: Matching the Digital Decay Theme with Enhanced Auras.
+ */
+
+/*------------------------------------*\
+  #BASE & UTILITIES
+\*------------------------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  /* Colors */
+  --color-brand-primary: #a157ff; /* Neon Purple */
+  --color-brand-secondary: #ff57d9; /* Neon Pink */
+  --color-brand-cta: #00e5ff; /* Cyan accent */
+
+  --color-text-primary: #F0F3F7;
+  --color-text-secondary: #e9ebf899;
+  --color-text-warning: #ff4e4e;
+  --color-text-disabled: #61448b;
+  --color-text-dark: #1b1130;
+  --color-text-success: #57ff8a;
+
+  --color-bg-dark: #100b21;
+  --color-bg-modal: rgba(15, 17, 20, 0.85);
+  --color-bg-input: rgba(25, 30, 36, 0.38);
+
+  --color-border-input: rgba(161, 87, 255, 0.35);
+  --color-border-modal: rgba(161, 87, 255, 0.15);
+  --color-border-success: #57ff8a;
+  --color-border-error: #ff4e4e;
+
+  /* Gradients */
+  --gradient-delete: linear-gradient(90deg, #ff57d9 0%, #ff748e 100%);
+  --gradient-delete-hover: linear-gradient(90deg, #ff48d1 0%, #ff5279 100%);
+  --gradient-otp: linear-gradient(90deg, #00e5ff 0%, #5ffbf1 100%);
+  --gradient-otp-hover: linear-gradient(90deg, #3fdbfe 0%, #68fdfd 100%);
+  --gradient-modal-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(70, 70, 117, 0.14) 90%);
+
+  /* Shadows */
+  --shadow-delete-base: 0 8px 30px -4px #ff57d950;
+  --shadow-delete-hover: 0 15px 50px 0 rgba(255, 87, 217, 0.6);
+  --shadow-otp-base: 0 5px 24px rgba(0, 229, 255, 0.17);
+  --shadow-otp-hover: 0 0 30px 0 rgba(63, 219, 254, 0.6);
+  --shadow-modal-base: 0 12px 40px 10px rgba(16, 22, 32, 0.62), inset 0 1.5px 12px 3px rgba(161, 87, 255, 0.15);
+  --shadow-input-focus: 0 0 8px 4px rgba(161, 87, 255, 0.25);
+  --shadow-message-error: 0 0 10px rgba(255, 78, 78, 0.4);
+  --shadow-message-success: 0 0 10px rgba(87, 255, 138, 0.4);
+}
+
+/* Base styles for a smoother experience */
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/*------------------------------------*\
+  #NAVBAR
+\*------------------------------------*/
+
+.navbar-trigger-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 80px;
+  z-index: 11;
+}
+
+.navbar-indicator {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 12;
+  opacity: 1;
+  transition: all 0.4s ease-in-out;
+  animation: bounce 2s infinite;
+}
+
+.navbar-indicator.hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+.navbar-container {
+  width: 100vw;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-bg-dark);
+  backdrop-filter: blur(0);
+  border-bottom: 1px solid var(--color-border-modal);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  transform: translateY(-100%);
+  transition: transform 0.4s ease-in-out, background 0.4s ease-in-out, backdrop-filter 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+}
+
+.navbar-container.visible {
+  transform: translateY(0);
+  background: rgba(161, 87, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-content {
+  display: flex;
+  gap: 2.6rem;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.navbar-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* Initial glow */
+  box-shadow: 0 0 5px var(--color-brand-primary);
+  border-radius: 12px;
+  padding: 5px 8px;
+}
+
+/* Enhanced hover effect */
+.navbar-brand-container:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px var(--color-brand-primary), 0 0 30px var(--color-brand-primary), 0 0 40px var(--color-brand-primary);
+}
+
+.navbar-brand-logo {
+  height: 60px;
+  width: auto;
+  animation: logo-pulse 4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  /* Initial glow */
+  filter: drop-shadow(0 0 2px var(--color-brand-primary));
+}
+
+@keyframes logo-pulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px var(--color-brand-primary)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 10px var(--color-brand-primary)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 2px var(--color-brand-primary)); }
+}
+
+.navbar-brand-container:hover .navbar-brand-logo {
+  animation: none;
+  transform: scale(1.15);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  letter-spacing: -0.05em;
+  /* Initial text glow */
+  text-shadow: 0 0 5px var(--color-brand-primary);
+}
+
+.navbar-brand-container:hover .navbar-brand {
+  /* Enhanced hover glow */
+  text-shadow: 0 0 10px var(--color-brand-primary), 0 0 20px var(--color-brand-primary);
+}
+
+.nav-links-right {
+  margin-left: auto;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  /* Initial state of the neon glow */
+  box-shadow: 0 0 2px var(--color-brand-cta);
+  text-shadow: 0 0 2px var(--color-brand-cta);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background-color: var(--color-brand-cta);
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.nav-link:hover {
+  color: var(--color-text-primary);
+  background: rgba(161, 87, 255, 0.15);
+  transform: scale(1.1) translateY(-2px);
+  /* Enhanced hover glow */
+  box-shadow: 0 0 15px var(--color-brand-cta), 0 0 20px var(--color-brand-cta), 0 0 30px var(--color-brand-cta);
+  text-shadow: 0 0 5px var(--color-brand-cta), 0 0 10px var(--color-brand-cta);
+}
+
+.nav-link-current {
+  color: var(--color-text-primary);
+  background: rgba(161, 87, 255, 0.2);
+  pointer-events: none;
+  border: 1px solid rgba(161, 87, 255, 0.3);
+  /* Constant glow for the current link */
+  box-shadow: 0 0 8px var(--color-brand-cta), 0 0 10px var(--color-brand-cta);
+  text-shadow: 0 0 5px var(--color-brand-cta);
+}
+
+.logout-button {
+  background: var(--gradient-delete);
+  color: var(--color-text-primary);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  /* --- EDITED: Matched glow style to other nav items --- */
+  box-shadow: 0 0 2px var(--color-brand-secondary);
+  text-shadow: 0 0 2px var(--color-brand-secondary);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.logout-button:hover {
+  background: var(--gradient-delete-hover);
+  transform: translateY(-2px) scale(1.05);
+  /* --- EDITED: Enhanced the glowing aura to match nav item style --- */
+  box-shadow: 0 0 15px var(--color-brand-secondary), 0 0 20px var(--color-brand-secondary), 0 0 30px var(--color-brand-secondary);
+  text-shadow: 0 0 5px var(--color-brand-secondary), 0 0 10px var(--color-brand-secondary);
+}
+

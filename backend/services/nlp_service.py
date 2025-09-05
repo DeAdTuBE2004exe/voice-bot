@@ -1,34 +1,34 @@
-# backend/services/nlp_service.py
-
 import logging
-import ollama
+import os
+from groq import Groq
 
 class NLPService:
-    def __init__(self, model_name: str = "llama3"):
-        """
-        NLPService using local Ollama model.
-        Make sure Ollama is running and model is pulled:
-        ollama pull llama3
-        """
-        self.model_name = model_name
+    def __init__(self, model_name: str = "llama-3-70b-8192"):
+        self.model_name = model_name  # Use GroqCloud's recommended/default model
+        self.api_key = os.getenv("GROQ_API_KEY")
+        # print("DEBUG: My GROQ_API_KEY is:", repr(self.api_key))  # <-- Debug print for key
+        if not self.api_key:
+            logging.error("Groq API key not found in environment!")
+        self.client = Groq(api_key=self.api_key)
         logging.info(f"NLPService initialized with model: {self.model_name}")
 
     def process(self, user_text: str) -> str:
-        """
-        Generate a reply using the local Ollama model.
-        """
         if not user_text or not user_text.strip():
             return "I didn't hear anything. Could you repeat?"
 
         try:
-            response = ollama.chat(
+            completion = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[
                     {"role": "system", "content": "You are a helpful AI assistant."},
                     {"role": "user", "content": user_text}
-                ]
+                ],
+                temperature=0.7,
+                max_completion_tokens=1000,
+                top_p=1,
+                stream=False
             )
-            return response['message']['content'].strip()
+            return completion.choices[0].message.content.strip()
         except Exception as e:
-            logging.error(f"Ollama NLP error: {e}")
+            logging.error(f"Groq NLP error: {e}")
             return "Oops, something went wrong while generating a response."

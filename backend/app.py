@@ -1,40 +1,42 @@
-from flask import Flask
-from flask_mongoengine import MongoEngine
 from dotenv import load_dotenv
-import os
-
-# Load environment variables from .env
 load_dotenv()
 
-# Create the Flask app
+import os
+print("DEBUG: GROQ_API_KEY loaded in app.py:", repr(os.getenv("GROQ_API_KEY")))
+
+from flask import Flask
+from flask_mongoengine import MongoEngine
+from flask_cors import CORS
+
 app = Flask(__name__)
 
-# Configure MongoEngine connection with your MongoDB URI
+# --- GLOBAL CORS CONFIG ---
+CORS(
+    app,
+    resources={r"/*": {"origins": "http://localhost:5173"}},
+    supports_credentials=True,
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
+# --------------------------
+
 app.config['MONGODB_SETTINGS'] = {
     'host': os.environ.get('MONGODB_URI')
 }
 
-# Initialize MongoEngine ORM with Flask app
 db = MongoEngine(app)
 
-# -------------------------
-# Register Blueprints
-# -------------------------
-
-# Voicebot routes (ASR + Chatbot pipeline)
+# Voicebot routes
 from routes.voicebot import voicebot_blueprint
-app.register_blueprint(voicebot_blueprint)  # no prefix
+app.register_blueprint(voicebot_blueprint)
 
-# Auth routes (/signup, /login, /chat, etc.)
+# Auth routes (CORS applies here too)
 from routes.auth import auth_blueprint
-app.register_blueprint(auth_blueprint)
+app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-# Voice samples upload/list routes
+# Voice samples routes
 from routes.voice_sample import voice_sample_blueprint
 app.register_blueprint(voice_sample_blueprint)
 
-# -------------------------
-# Run Flask app
-# -------------------------
 if __name__ == "__main__":
     app.run(debug=True)
