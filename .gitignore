@@ -1,46 +1,98 @@
-# Ignore document files
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node modules
+node_modules/
+
+# Build / output folders
+build/
+dist/
+dist-ssr/
+frontend/build/
+frontend/dist/
+frontend/node_modules/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE/editor configs
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# VSCode configs: ignore all except extensions.json
+.vscode/*
+!.vscode/extensions.json
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+._*
+
+# Environment files and secrets
+*.env
+.env
+.env.*
+credentials.json
+
+# CSS / Cache / Misc
+.cache/
+.eslintcache
+.next/
+out/
+.svelte-kit/
+
+# Documents and images
 *.pdf
 *.docx
 *.odt
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.bmp
 
-# Ignore Python caches and bytecode
+# Python caches and bytecode
 __pycache__/
 *.pyc
 *.pyo
 
-# Ignore virtual environments
+# Virtual environments
 .venv/
 venv/
 env/
 
-# Ignore IDE/editor configs
-.vscode/
-.idea/
-
-# Ignore OS-specific files
-.DS_Store
-Thumbs.db
-
-# Ignore logs and outputs
-*.log
-logs/
-output/
-
-# Ignore secrets, env files
-*.env
-.env
-credentials.json
-
-# Ignore build/distribution artifacts
-build/
-dist/
-*.egg-info/
-
-# Ignore temporary and backup files
+# Temporary/backup files
 *.tmp
 *.temp
 *.bak
 *.swp
+*~
+*.orig
 
-# Ignore Jupyter checkpoints
+# Jupyter checkpoints
 .ipynb_checkpoints/
+
+# Coverage/testing
+coverage/
+.coverage
+*.cover
+*.coverage.*
+.nyc_output/
+test-output/
+
+# Miscellaneous
+*.local
+*.lock-wscript
