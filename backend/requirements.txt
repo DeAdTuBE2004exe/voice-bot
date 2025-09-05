@@ -1,42 +1,38 @@
 # Core web
-gunicorn
-Flask
-flask-cors
-flask-mongoengine
-Flask-WTF
+gunicorn==23.0.0
+Flask==2.2.5
+flask-cors==6.0.1
+flask-mongoengine==1.0.0
+Flask-WTF==1.2.2
 
 # Database and utilities
-mongoengine
-pymongo
+mongoengine==0.29.1
+pymongo==4.14.1
 
 # Environment
-python-dotenv
+python-dotenv==1.1.1
 
 # HTTP client libs
-httpx
+httpx==0.28.1
 
-# Data science and ML libs (try pinned or latest compatible)
-numpy
-scipy
-scikit-learn
-pandas
+# Data science and ML libs (compatible versions)
+numpy==1.25.2
+scipy==1.16.1
+scikit-learn==1.7.1
+pandas==1.5.3
 
 # NLP and voice
-spacy
-spacy-legacy
-spacy-loggers
-SudachiPy
+spacy==3.8.7
+spacy-legacy==3.0.12
+spacy-loggers==1.0.5
+SudachiPy==0.6.10
 
 # Audio processing
-librosa
-torchaudio
-torch
+librosa==0.11.0
+torchaudio==2.8.0
+torch==2.8.0
 
 # Pip installers for many dependencies
-setuptools
-wheel
-pip
-
-# Add any other necessary packages, ideally pinned, e.g.
-# remove TTS package or replace with a known compatible fork or alternative
-
+setuptools==80.9.0
+wheel==0.45.1
+pip==25.2
