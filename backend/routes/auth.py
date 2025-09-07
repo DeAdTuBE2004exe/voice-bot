@@ -87,8 +87,6 @@ def send_otp_email(to_email, otp):
     except Exception as e:
         print(f"Failed to send OTP email: {str(e)}")
 
-
-# --- OTP Signup: PendingUser only ---
 @auth_blueprint.route('/signup', methods=['POST', 'OPTIONS'])
 def signup():
     if request.method == 'OPTIONS':
@@ -98,15 +96,25 @@ def signup():
     email = data.get('email')
     password = data.get('password')
 
+    # Check if fully registered user exists with username/email
     if User.objects(username=username).first() or User.objects(email=email).first():
         return jsonify({'error': 'User already exists'}), 400
-    if PendingUser.objects(username=username).first() or PendingUser.objects(email=email).first():
+
+    # Check for pending registration by email
+    pending = PendingUser.objects(email=email).first()
+    if pending:
+        # Update username if changed
+        if pending.username != username:
+            pending.username = username
+            password_hash = generate_password_hash(password, method='pbkdf2:sha256')
+            pending.password_hash = password_hash
+            pending.save()
         return jsonify({'error': 'User registration in progress. Please verify OTP.'}), 409
 
+    # New pending registration
     password_hash = generate_password_hash(password, method='pbkdf2:sha256')
     otp = generate_otp()
     otp_expiry = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
-
     PendingUser.objects(email=email).update_one(
         set__username=username,
         set__password_hash=password_hash,
@@ -116,6 +124,7 @@ def signup():
     )
     send_otp_email(email, otp)
     return jsonify({'message': 'OTP sent to your email.'}), 201
+
 
 
 @auth_blueprint.route('/signup/verify-otp', methods=['POST', 'OPTIONS'])

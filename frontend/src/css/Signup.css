@@ -92,7 +92,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem 3rem 3rem 3rem;
+  padding: 3rem 2.5rem;
   text-align: center;
   border: 1px solid rgba(161, 87, 255, 0.2);
   animation: card-in 0.8s ease-out, pulse-glow 5s infinite cubic-bezier(0.4, 0, 0.6, 1);
@@ -184,6 +184,7 @@ body {
   font-size: 0.97rem;
   margin-top: 5px;
   user-select: none;
+  text-align: center;
 }
 
 .signup-button {
@@ -270,5 +271,94 @@ body {
   text-decoration: none;
   color: var(--color-brand-primary);
   text-shadow: 0 0 8px var(--color-brand-primary), 0 0 15px var(--color-brand-primary);
+}
+
+
+/*------------------------------------*\
+  #OTP VERIFICATION STYLES
+\*------------------------------------*/
+
+.otp-verification {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  text-align: center; /* Center align the label and error messages */
+}
+
+/* New rule to center the OTP label's container */
+.otp-verification .form-group-custom {
+  text-align: center;
+}
+
+.otp-verify-button {
+  width: 100%;
+  background: var(--gradient-otp);
+  color: var(--color-text-dark);
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 0.9rem 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-otp-base);
+  margin-top: 10px;
+}
+
+.otp-verify-button:hover:not(:disabled) {
+  background: var(--gradient-otp-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-otp-hover);
+}
+
+.otp-verify-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.otp-button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.otp-resend-button, .otp-reset-button {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--color-border-input);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.otp-resend-button:hover:not(:disabled) {
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--color-brand-cta);
+  border-color: var(--color-brand-cta);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.otp-reset-button:hover:not(:disabled) {
+  background: rgba(255, 87, 217, 0.1);
+  color: var(--color-brand-secondary);
+  border-color: var(--color-brand-secondary);
+  box-shadow: 0 0 10px rgba(255, 87, 217, 0.3);
+}
+
+.otp-resend-button:disabled, .otp-reset-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--color-border-input);
+  background: transparent;
+  color: var(--color-text-disabled);
+  box-shadow: none;
 }
 

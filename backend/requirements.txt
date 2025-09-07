@@ -43,7 +43,7 @@ librosa
 torchaudio
 torch
 openai-whisper
-TTS
+tts
 soundfile
 audioread
 soxr
