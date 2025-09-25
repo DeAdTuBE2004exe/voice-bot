@@ -45,7 +45,7 @@ const Home = () => {
           </h2>
           <ul className="features-list">
             <li>Fast, interactive AI chat experience</li>
-            <li>Text-to-speech and speech input features (coming soon!)</li>
+            <li>Text-to-speech and speech input features</li>
             <li>Secure login and data privacy</li>
             <li>Fully responsive</li>
             <li>Simple clean design and seamless UX</li>
