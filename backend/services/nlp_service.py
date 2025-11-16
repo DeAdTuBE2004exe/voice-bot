@@ -20,7 +20,7 @@ class NLPService:
             completion = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[
-                    {"role": "system", "content": "You are a helpful AI assistant. If possible try to answer questions in 1 - 2 sentences."},
+                    {"role": "system", "content": "You are a helpful AI assistant."},
                     {"role": "user", "content": user_text}
                 ],
                 temperature=0.7,

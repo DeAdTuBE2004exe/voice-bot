@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
-print("DEBUG: GROQ_API_KEY loaded in app.py:", repr(os.getenv("GROQ_API_KEY")))
+# print("DEBUG: GROQ_API_KEY loaded in app.py:", repr(os.getenv("GROQ_API_KEY")))
 
 from flask import Flask
 from flask_mongoengine import MongoEngine
