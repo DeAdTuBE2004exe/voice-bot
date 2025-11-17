@@ -31,6 +31,12 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
+  // 🔥 AUTH GUARD — IMPORTANT
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/chat", { replace: true });
+  }, [navigate]);
+
   // Restore state after reload
   useEffect(() => {
     const pendingEmail = localStorage.getItem('pendingSignupEmail');
@@ -71,23 +77,25 @@ const Signup = () => {
       setResendAvailable(false);
       setResendCountdown(60);
       setSuccess('Signup successful! OTP sent to your email. Please enter it below.');
-      // Persist across reloads
+
       localStorage.setItem('pendingSignupEmail', data.email);
       localStorage.setItem('pendingOtpSent', 'true');
+
     } catch (err) {
-      // Check for backend error indicating pending OTP
+
       if (
         err?.error === 'User registration in progress. Please verify OTP.' ||
         err?.message === 'User registration in progress. Please verify OTP.'
       ) {
         setSignupEmail(data.email);
-        setOtpSent(true); // Show OTP input phase!
+        setOtpSent(true);
         setSuccess('Your registration is in progress. Please enter the OTP sent previously.');
         localStorage.setItem('pendingSignupEmail', data.email);
         localStorage.setItem('pendingOtpSent', 'true');
       } else {
         setError(err?.error || err?.message || 'Signup failed. Try another username/email.');
       }
+
     } finally {
       setLoading(false);
     }
@@ -102,17 +110,21 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: signupEmail, otp }),
       });
+
       if (!res.ok) {
         const data = await res.json();
         setOtpError(data.error || 'OTP verification failed.');
         setOtpLoading(false);
         return;
       }
+
       setSuccess('OTP verified successfully! Redirecting to login...');
-      // Clear persistent state
       localStorage.removeItem('pendingSignupEmail');
       localStorage.removeItem('pendingOtpSent');
-      setTimeout(() => navigate('/login'), 2000);
+
+      // 🔥 FIX: REPLACE HISTORY
+      setTimeout(() => navigate('/login', { replace: true }), 1500);
+
     } catch {
       setOtpError('OTP verification failed. Please try again.');
     }
@@ -129,28 +141,30 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: signupEmail }),
       });
+
       if (!res.ok) {
         const data = await res.json();
         setOtpError(data.error || 'Failed to resend OTP.');
         setOtpLoading(false);
         return;
       }
+
       setResendAvailable(false);
       setResendCountdown(60);
       setSuccess('OTP resent successfully.');
+
     } catch {
       setOtpError('Failed to resend OTP. Please try again.');
     }
     setOtpLoading(false);
   };
 
-  // Manual "start over" resets states and localStorage to allow fresh signup flow
   const resetSignup = () => {
     localStorage.removeItem('pendingSignupEmail');
     localStorage.removeItem('pendingOtpSent');
     setSignupEmail('');
     setOtp('');
-    setOtpSent(false);      // Show signup form again
+    setOtpSent(false);
     setError('');
     setSuccess('');
     setOtpError('');
@@ -163,49 +177,37 @@ const Signup = () => {
 
         {error && <Alert variant="danger" className="alert-custom alert-danger">{error}</Alert>}
 
+        {/* FORM */}
         {!otpSent ? (
           <form onSubmit={handleSubmit(onSubmit)} className="signup-form" noValidate>
             <div className="form-group-custom">
               <label htmlFor="username" className="form-label-custom">Username</label>
-              <input
-                id="username"
-                type="text"
-                autoComplete="off"
-                placeholder="Enter username"
+              <input id="username" type="text" placeholder="Enter username"
                 {...register('username')}
                 className={`form-input-custom ${errors.username ? 'form-input-error' : ''}`}
               />
               {errors.username && <div className="form-error-message">{errors.username.message}</div>}
             </div>
+
             <div className="form-group-custom">
               <label htmlFor="email" className="form-label-custom">Email</label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="off"
-                placeholder="Enter email"
+              <input id="email" type="email" placeholder="Enter email"
                 {...register('email')}
                 className={`form-input-custom ${errors.email ? 'form-input-error' : ''}`}
               />
               {errors.email && <div className="form-error-message">{errors.email.message}</div>}
             </div>
+
             <div className="form-group-custom">
               <label htmlFor="password" className="form-label-custom">Password</label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="off"
-                placeholder="Enter password"
+              <input id="password" type="password" placeholder="Enter password"
                 {...register('password')}
                 className={`form-input-custom ${errors.password ? 'form-input-error' : ''}`}
               />
               {errors.password && <div className="form-error-message">{errors.password.message}</div>}
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="signup-button"
-            >
+
+            <button type="submit" disabled={loading} className="signup-button">
               {loading ? <Spinner animation="border" size="sm" /> : 'Sign Up'}
             </button>
           </form>
@@ -214,28 +216,19 @@ const Signup = () => {
             {success && <Alert variant="success" className="alert-custom alert-success">{success}</Alert>}
 
             <label htmlFor="otp" className="form-label-custom">Enter OTP</label>
-            <input
-              id="otp"
-              type="text"
-              value={otp}
-              onChange={e => setOtp(e.target.value)}
-              disabled={otpLoading}
-              className="form-input-custom"
-              placeholder="Enter OTP"
-              maxLength="6"
-            />
+            <input id="otp" type="text" value={otp} onChange={e => setOtp(e.target.value)}
+              disabled={otpLoading} className="form-input-custom" placeholder="Enter OTP" maxLength="6" />
+
             {otpError && <div className="form-error-message">{otpError}</div>}
 
-            <button
-              onClick={verifyOtp}
+            <button onClick={verifyOtp}
               disabled={otpLoading || otp.length === 0}
               className="otp-verify-button"
             >
               {otpLoading ? <Spinner animation="border" size="sm" /> : 'Verify OTP'}
             </button>
 
-            <button
-              onClick={resendOtp}
+            <button onClick={resendOtp}
               disabled={!resendAvailable || otpLoading}
               className="otp-resend-button"
               style={{ marginLeft: '10px' }}
@@ -243,11 +236,8 @@ const Signup = () => {
               {resendAvailable ? 'Resend OTP' : `Resend in ${resendCountdown}s`}
             </button>
 
-            <button
-              onClick={resetSignup}
-              disabled={otpLoading}
-              className="otp-reset-button"
-              style={{ marginLeft: '10px' }}
+            <button onClick={resetSignup} disabled={otpLoading}
+              className="otp-reset-button" style={{ marginLeft: '10px' }}
             >
               Start Over
             </button>
@@ -255,10 +245,7 @@ const Signup = () => {
         )}
 
         <p className="login-prompt">
-          Already have an account?{' '}
-          <Link to="/login" className="login-link">
-            Log in
-          </Link>
+          Already have an account? <Link to="/login" className="login-link">Log in</Link>
         </p>
       </div>
     </div>

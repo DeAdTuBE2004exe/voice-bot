@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   // Inactivity timer reset
   const resetInactivityTimer = () => {
     if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(logout, 3 * 60 * 1000) // 3 Minutes AFK
+    timerRef.current = setTimeout(logout, 10 * 60 * 1000) // 10 Minutes AFK
   }
 
   // Setup listeners when logged in

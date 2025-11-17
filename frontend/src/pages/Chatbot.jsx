@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Alert, Spinner } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import axiosInstance from '../api/axiosInstance';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate here
 import '../css/Chatbot.css';
 
 const Chatbot = () => {
@@ -20,13 +21,25 @@ const Chatbot = () => {
   // Track the current audio Object URL so we can revoke it
   const currentAudioUrlRef = useRef(null);
 
+  const navigate = useNavigate(); // Initialize navigate here
+
+  // Block browser back button from navigating to login/signup
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.pathname === "/login" || window.location.pathname === "/signup") {
+        navigate("/chat", { replace: true });
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [navigate]);
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  // Clean markdown symbols before TTS to avoid reading asterisks
   const stripMarkdown = (text) => {
     return text.replace(/\*\*/g, '')
       .replace(/\*/g, '')
@@ -35,10 +48,8 @@ const Chatbot = () => {
       .replace(/\[(.*?)\]\(.*?\)/g, '$1');
   };
 
-  // Play audio using the controlled audio element and revoke old URLs
   const playAudio = (url) => {
     if (audioRef.current) {
-      // Revoke old URL if exists
       if (currentAudioUrlRef.current) {
         URL.revokeObjectURL(currentAudioUrlRef.current);
       }
@@ -58,7 +69,6 @@ const Chatbot = () => {
     }
   };
 
-  // Stop audio playback and revoke URL
   const stopAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
