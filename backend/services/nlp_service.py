@@ -20,7 +20,7 @@ class NLPService:
             completion = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[
-                    {"role": "system", "content": "You are a helpful AI assistant."},
+                    {"role": "system", "content": "You are a fast, concise AI assistant.Always respond in short sentences that can be converted to speech quickly. Avoid long paragraphs. Break your answer into small chunks so audio output can start immediately. Provide clear, correct information without unnecessary details. Keep every response brief, natural, and easy for text-to-speech processing."},
                     {"role": "user", "content": user_text}
                 ],
                 temperature=0.7,
