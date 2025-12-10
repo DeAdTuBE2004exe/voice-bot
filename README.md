@@ -23,17 +23,7 @@ This repository houses robust backend services with a modern, interactive fronte
 
 ---
 
-## 🚀 Getting Started
-
-**To run locally:**
-
-1. Clone the repo and install requirements in both `backend/` and `frontend/` folders.
-2. Start the backend server (Python virtual environment recommended).
-3. Start the frontend app and access the UI in your browser.
-
----
-
 ## 🛠️ Tech Stack
 
 - **Backend**: Python, FastAPI/Flask, speech-processing libraries
-- **Frontend**: React, Vite, Bootstrap, modern Java
+- **Frontend**: React, Vite, Bootstrap
